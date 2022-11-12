@@ -1,46 +1,39 @@
 version: "3"
 
+# uffizzi integration
 x-uffizzi:
   ingress:
     service: metabase
-    port: 8081
+    port: 3000
 
 services:
-  metabase:
-   image: "${METABASE_IMAGE}"
+  db:
+   image: "${DB_IMAGE}"
+   environment:
+     - POSTGRES_USER=admin
+     - POSTGRES_PASSWORD=admin
+     - POSTGRES_DB=root
+     - PGDATA=/tmp
    deploy:
       resources:
         limits:
           memory: 250M
-   restart: always
-   ports:
-     - "3000:3000"
+   volumes:
+    - pg_data:/var/lib/postgresql/data
 
-  postgres:
-    image: postgres
-    restart: always
-    environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin
-      - POSTGRES_DB=root
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
-      - ./sql/fill_tables.sql:/docker-entrypoint-initdb.d/fill_tables.sql
-      - pgdata:/var/lib/postgresql/data
-
-  pgadmin:
-   image: dpage/pgadmin4
-   restart: always
+  metabase:
+   image: "${METABASE_IMAGE}"
    environment:
-     - PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION=False
-     - PGADMIN_DEFAULT_EMAIL=admin@admin.com
-     - PGADMIN_DEFAULT_PASSWORD=secret
-   ports:
-     - "5050:80"
-   depends_on:
-     - postgres
+        - MB_DB_TYPE=postgres
+        - MB_DB_DBNAME=root
+        - MB_DB_PORT=5432
+        - MB_DB_USER=admin
+        - MB_DB_PASS=admin
+        - MB_DB_HOST=localhost
+   deploy:
+      resources:
+        limits:
+          memory: 1000M
 
 volumes:
-  pgdata:
+  pg_data:
