@@ -64,6 +64,8 @@ jobs:
           name: preview-spec
           path: docker-compose.rendered.yml
           retention-days: 2
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
       - name: Serialize PR Event to File
         run:  |
           cat << EOF > event.json
