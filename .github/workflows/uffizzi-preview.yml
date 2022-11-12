@@ -7,6 +7,7 @@ on:
     types:
       - completed
 
+
 jobs:
   cache-compose-file:
     name: Cache Compose File
@@ -71,13 +72,13 @@ jobs:
     name: Use Remote Workflow to Preview on Uffizzi
     needs:
       - cache-compose-file
-    uses: UffizziCloud/preview-action/.github/workflows/reusable.yaml@v2
+    uses: UffizziCloud/preview-action/.github/workflows/reusable.yaml@v2.6.1
     with:
       # If this workflow was triggered by a PR close event, cache-key will be an empty string
       # and this reusable workflow will delete the preview deployment.
       compose-file-cache-key: ${{ needs.cache-compose-file.outputs.compose-file-cache-key }}
       compose-file-cache-path: docker-compose.rendered.yml
-      server: https://app.uffizzi.com/
+      server: https://app.uffizzi.com
       pr-number: ${{ needs.cache-compose-file.outputs.pr-number }}
     permissions:
       contents: read
