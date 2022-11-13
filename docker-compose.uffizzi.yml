@@ -28,7 +28,7 @@ services:
     volumes:
       - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
       - ./sql/fill_tables.sql:/docker-entrypoint-initdb.d/fill_tables.sql
-      - pgdata:/var/lib/postgresql/data
+      - pgdataV:/var/lib/postgresql/data
 
   pgadmin:
    image: dpage/pgadmin4
@@ -43,4 +43,4 @@ services:
      - postgres
 
 volumes:
-  pgdata:
+  pgdataV:
