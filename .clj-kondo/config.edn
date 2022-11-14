@@ -24,6 +24,8 @@
     (taoensso.nippy/extend-freeze)
     (taoensso.nippy/extend-thaw)]}
 
+
+  :refer-clojure {:exclude [abs]}
   :refer-all                    {:level   :warning
                                  :exclude [clojure.test]}
   ;; TODO (cam): I think we just need to tell it how to handle MBQL match and we can enable this?
