@@ -2,7 +2,7 @@
 # STAGE 1: builder
 ###################
 
-FROM metabase/ci:latest as builder
+FROM metabase/ci:java-17-clj-1.11.0.1100.04-2022-node-browsers as builder
 
 ARG MB_EDITION=oss
 
