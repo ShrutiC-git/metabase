@@ -1,6 +1,7 @@
 (ns metabase.automagic-dashboards.core
   "Automatically generate questions and dashboards based on predefined
    heuristics."
+  (:refer-clojure :exclude (abs))
   (:require [buddy.core.codecs :as codecs]
             [cheshire.core :as json]
             [clojure.math.combinatorics :as math.combo]

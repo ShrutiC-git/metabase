@@ -1,4 +1,5 @@
 (ns metabase.query-processor.middleware.cache.impl
+  (:refer-clojure :exclude (abs))
   (:require [clojure.tools.logging :as log]
             [metabase.public-settings :as public-settings]
             [metabase.util :as u]

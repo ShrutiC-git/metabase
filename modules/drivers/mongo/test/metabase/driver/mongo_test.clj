@@ -1,5 +1,6 @@
 (ns metabase.driver.mongo-test
   "Tests for Mongo driver."
+  (:refer-clojure :exclude (abs))
   (:require [cheshire.core :as json]
             [clojure.test :refer :all]
             [medley.core :as m]

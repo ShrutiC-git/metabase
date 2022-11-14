@@ -1,5 +1,6 @@
 (ns metabase.sync.analyze.fingerprint.fingerprinters
   "Non-identifying fingerprinters for various field types."
+  (:refer-clojure :exclude (abs))
   (:require [bigml.histogram.core :as hist]
             [java-time :as t]
             [kixi.stats.core :as stats]

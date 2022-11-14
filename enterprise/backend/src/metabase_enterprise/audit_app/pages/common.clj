@@ -1,5 +1,6 @@
 (ns metabase-enterprise.audit-app.pages.common
   "Shared functions used by audit internal queries across different namespaces."
+  (:refer-clojure :exclude (abs))
   (:require [clojure.core.async :as a]
             [clojure.core.memoize :as memoize]
             [clojure.java.jdbc :as jdbc]

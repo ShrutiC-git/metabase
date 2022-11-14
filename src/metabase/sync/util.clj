@@ -1,6 +1,7 @@
 (ns metabase.sync.util
   "Utility functions and macros to abstract away some common patterns and operations across the sync processes, such
   as logging start/end messages."
+  (:refer-clojure :exclude (abs))
   (:require [buddy.core.hash :as buddy-hash]
             [clojure.math.numeric-tower :as math]
             [clojure.string :as str]

@@ -1,4 +1,5 @@
 (ns metabase-enterprise.serialization.v2.load-test
+  (:refer-clojure :exclude (abs))
   (:require [clojure.test :refer :all]
             [java-time :as t]
             [metabase-enterprise.serialization.test-util :as ts]

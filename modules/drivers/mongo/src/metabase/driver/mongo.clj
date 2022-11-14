@@ -1,5 +1,6 @@
 (ns metabase.driver.mongo
   "MongoDB Driver."
+  (:refer-clojure :exclude (abs))
   (:require [cheshire.core :as json]
             [cheshire.generate :as json.generate]
             [clojure.string :as str]

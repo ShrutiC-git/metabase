@@ -1,5 +1,6 @@
 (ns metabase-enterprise.sso.integrations.jwt
   "Implementation of the JWT backend for sso"
+  (:refer-clojure :exclude (abs))
   (:require [buddy.sign.jwt :as jwt]
             [clojure.string :as str]
             [java-time :as t]

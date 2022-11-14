@@ -1,4 +1,5 @@
 (ns metabase-enterprise.serialization.v2.storage.yaml-test
+  (:refer-clojure :exclude (abs))
   (:require
    [clojure.java.io :as io]
    [clojure.test :refer :all]

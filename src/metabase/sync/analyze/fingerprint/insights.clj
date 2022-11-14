@@ -1,5 +1,6 @@
 (ns metabase.sync.analyze.fingerprint.insights
   "Deeper statistical analysis of results."
+  (:refer-clojure :exclude (abs))
   (:require [java-time :as t]
             [kixi.stats.core :as stats]
             [kixi.stats.math :as math]

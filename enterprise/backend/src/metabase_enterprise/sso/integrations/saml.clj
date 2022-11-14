@@ -16,6 +16,7 @@
   6. Metabase parses/validates the SAML response
 
   7. Metabase inits the user session, responds with a redirect to back to the original `url`"
+  (:refer-clojure :exclude (abs))
   (:require [buddy.core.codecs :as codecs]
             [clojure.string :as str]
             [clojure.tools.logging :as log]

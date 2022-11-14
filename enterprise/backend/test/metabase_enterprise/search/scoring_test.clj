@@ -1,4 +1,5 @@
 (ns metabase-enterprise.search.scoring-test
+  (:refer-clojure :exclude (abs))
   (:require [cheshire.core :as json]
             [clojure.math.combinatorics :as math.combo]
             [clojure.string :as str]

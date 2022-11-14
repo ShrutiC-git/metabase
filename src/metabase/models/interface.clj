@@ -1,4 +1,5 @@
 (ns metabase.models.interface
+  (:refer-clojure :exclude (abs))
   (:require [buddy.core.codecs :as codecs]
             [cheshire.core :as json]
             [clojure.core.memoize :as memoize]
