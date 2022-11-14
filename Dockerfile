@@ -2,7 +2,7 @@
 # STAGE 1: builder
 ###################
 
-FROM metabase/ci:java-11-clj-1.11.0.1100.04-2022-build as builder
+FROM metabase/ci:latest as builder
 
 ARG MB_EDITION=oss
 
