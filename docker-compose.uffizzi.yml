@@ -18,6 +18,8 @@ services:
       resources:
         limits:
           memory: 250M
+   volumes:
+    - pg_data:/var/lib/postgresql/data
 
   metabase:
    image: "${METABASE_IMAGE}"
@@ -32,3 +34,6 @@ services:
       resources:
         limits:
           memory: 1000M
+
+volumes:
+  pg_data:
