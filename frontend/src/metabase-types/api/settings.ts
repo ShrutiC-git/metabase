@@ -58,9 +58,27 @@ export type LoadingMessage =
 
 export type TokenStatusStatus = "unpaid" | "past-due" | string;
 
-export type TokenStatus = {
+export interface TokenStatus {
   status?: TokenStatusStatus;
-};
+}
+
+export interface TokenFeatures {
+  advanced_config: boolean;
+  advanced_permissions: boolean;
+  audit_app: boolean;
+  content_management: boolean;
+  embedding: boolean;
+  hosting: boolean;
+  sandboxes: boolean;
+  sso: boolean;
+  whitelabel: boolean;
+}
+
+export interface SettingDefinition {
+  key: string;
+  env_name: string;
+  is_env_setting: boolean;
+}
 
 export interface Settings {
   "application-font": string;
@@ -68,27 +86,36 @@ export interface Settings {
   "available-fonts": string[];
   "available-locales": LocaleData[] | null;
   "custom-formatting": FormattingSettings;
+  "deprecation-notice-version": string | undefined;
+  "email-configured?": boolean;
   "enable-public-sharing": boolean;
   "enable-xrays": boolean;
-  "email-configured?": boolean;
-  engines: Record<string, Engine>;
-  "is-hosted?": boolean;
+  "google-auth-auto-create-accounts-domain": string | null;
   "google-auth-client-id": string | null;
-  "deprecation-notice-version": string | undefined;
+  "google-auth-configured": boolean;
+  "google-auth-enabled": boolean;
+  "is-hosted?": boolean;
+  "jwt-enabled"?: boolean;
+  "jwt-configured"?: boolean;
+  "ldap-configured?": boolean;
   "ldap-enabled": boolean;
   "loading-message": LoadingMessage;
+  "saml-configured"?: boolean;
+  "saml-enabled"?: boolean;
   "session-cookies": boolean | null;
-  "site-locale": string;
   "show-database-syncing-modal": boolean;
   "show-homepage-data": boolean;
-  "show-homepage-xrays": boolean;
   "show-homepage-pin-message": boolean;
+  "show-homepage-xrays": boolean;
   "show-lighthouse-illustration": boolean;
   "show-metabot": boolean;
-  "slack-token": string | null;
-  "slack-token-valid?": boolean;
+  "site-locale": string;
   "slack-app-token": string | null;
   "slack-files-channel": string | null;
-  "token-status": TokenStatus | undefined;
+  "slack-token": string | null;
+  "slack-token-valid?": boolean;
+  "token-features": TokenFeatures;
+  "token-status": TokenStatus | null;
+  engines: Record<string, Engine>;
   version: Version;
 }
