@@ -6,7 +6,7 @@ on:
 
 jobs:
   build-metabase:
-    name: Build and push `metabase` - cached w GHA cache
+    name: Build and push `metabase` - cached using GHA cache
     runs-on: ubuntu-latest
     outputs:
       tags: ${{ steps.meta.outputs.tags }}
