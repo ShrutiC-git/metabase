@@ -22,7 +22,7 @@ services:
     - pg_data:/var/lib/postgresql/data
 
   metabase:
-   image: "${METABASE_IMAGE}"
+   image: metabase/metabase
    environment:
         - MB_DB_TYPE=postgres
         - MB_DB_DBNAME=root
