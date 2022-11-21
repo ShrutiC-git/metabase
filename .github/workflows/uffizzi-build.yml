@@ -5,7 +5,7 @@ on:
 
 jobs:
   build-metabase:
-    name: Build and push `metabase`
+    name: Build and push `Metabase`
     runs-on: ubuntu-latest
     outputs:
       tags: ${{ steps.meta.outputs.tags }}
