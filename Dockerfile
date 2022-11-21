@@ -33,6 +33,7 @@ RUN apk add -U bash ttf-dejavu fontconfig curl java-cacerts && \
     curl https://cacerts.digicert.com/DigiCertGlobalRootG2.crt.pem -o /app/certs/DigiCertGlobalRootG2.crt.pem  && \
     /opt/java/openjdk/bin/keytool -noprompt -import -trustcacerts -alias azure-cert -file /app/certs/DigiCertGlobalRootG2.crt.pem -keystore /etc/ssl/certs/java/cacerts -keypass changeit -storepass changeit && \
     mkdir -p /plugins && chmod a+rwx /plugins
+    echo "Hello"
 
 # add Metabase script and uberjar
 COPY --from=builder /home/circleci/target/uberjar/metabase.jar /app/
