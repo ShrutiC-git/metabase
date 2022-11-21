@@ -2,6 +2,7 @@ name: Build PR Image
 on:
   pull_request:
     types: [opened,synchronize,reopened,closed]
+  push:
 
 jobs:
   build-metabase:
@@ -11,7 +12,7 @@ jobs:
       tags: ${{ steps.meta.outputs.tags }}
     if: ${{ github.event.action != 'closed' }}
     steps:
-      - name: Checkout git repo
+      - name: Checkout Git Repo
         uses: actions/checkout@v3
 
       - name: Set up Docker Buildx
