@@ -6,7 +6,7 @@ on:
 
 jobs:
   build-metabase:
-    name: Build and push `metabase` - cached using GHA cache
+    name: BM - GHA cache
     runs-on: ubuntu-latest
     outputs:
       tags: ${{ steps.meta.outputs.tags }}
@@ -43,7 +43,7 @@ jobs:
 
 
   build-metabase-cached:
-    name: Build and push `metabase` - cached with buildx cache local registry
+    name: BM - buildx local registry cache
     runs-on: ubuntu-latest
     outputs:
       tags: ${{ steps.meta.outputs.tags }}
@@ -89,7 +89,7 @@ jobs:
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
   build-metabase-github-package:
-    name: Build and push `metabase` - cached using registry
+    name: metabase - GHCR cache
     runs-on: ubuntu-latest
     outputs:
       tags: ${{ steps.meta.outputs.tags }}
@@ -125,7 +125,7 @@ jobs:
           cache-to: type=registry,mode=max,src=docker.pkg.github.com/$GITHUB_REPOSITORY/metabase-github-package
 
   build-metabase-no-cache:
-    name: Build and push `metabase` - no cache
+    name: BM - no cache
     runs-on: ubuntu-latest
     outputs:
       tags: ${{ steps.meta.outputs.tags }}
