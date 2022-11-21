@@ -2,48 +2,10 @@ name: Build PR Image
 on:
   pull_request:
     types: [opened,synchronize,reopened,closed]
-  push:
 
 jobs:
-  build-metabase:
-    name: BM - GHA cache
-    runs-on: ubuntu-latest
-    outputs:
-      tags: ${{ steps.meta.outputs.tags }}
-    if: ${{ github.event.action != 'closed' }}
-    steps:
-      - name: Checkout Git Repo
-        uses: actions/checkout@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Generate UUID image name
-        id: uuid
-        run: echo "UUID_WORKER=$(uuidgen)" >> $GITHUB_ENV
-
-      - name: Docker metadata
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: registry.uffizzi.com/${{ env.UUID_WORKER }}
-          tags: |
-            type=raw,value=60d
-
-      - name: Build and Push Image to registry.uffizzi.com - Uffizzi's ephemeral Registry
-        uses: docker/build-push-action@v3
-        with:
-          context: ./
-          file: Dockerfile
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          push: true
-          cache-from: type=gha
-          #cache-to: type=gha,mode=max
-
-
-  build-metabase-cached:
-    name: BM - buildx local registry cache
+  build-cubejs:
+    name: Build and push `Cube.JS`
     runs-on: ubuntu-latest
     outputs:
       tags: ${{ steps.meta.outputs.tags }}
@@ -66,90 +28,70 @@ jobs:
           images: registry.uffizzi.com/${{ env.UUID_WORKER }}
           tags: |
             type=raw,value=60d
-      - name: Cache Docker layers
-        uses: actions/cache@v2
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-single-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-single-buildx
+
       - name: Build and Push Image to registry.uffizzi.com - Uffizzi's ephemeral Registry
         uses: docker/build-push-action@v3
         with:
-          context: ./
-          file: Dockerfile
+          context: .
+          file: ./packages/cubejs-docker/latest.Dockerfile
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           push: true
-          cache-from: type=local,src=/tmp/.buildx-cache
-         # cache-to: type=local,dest=/tmp/.buildx-cache-new, mode=max
-  build-metabase-github-package:
-    name: metabase - GHCR cache
+          cache-from: type=gha
+          cache-to: type=gha
+
+  render-compose-file:
+    name: Render Docker Compose File
+    # Pass output of this workflow to another triggered by `workflow_run` event.
     runs-on: ubuntu-latest
+    needs:
+      - build-cubejs
     outputs:
-      tags: ${{ steps.meta.outputs.tags }}
-    if: ${{ github.event.action != 'closed' }}
+      compose-file-cache-key: ${{ steps.hash.outputs.hash }}
     steps:
-      - name: Checkout Git Repo
+      - name: Checkout git repo
         uses: actions/checkout@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Generate UUID image name
-        id: uuid
-        run: echo "UUID_WORKER=$(uuidgen)" >> $GITHUB_ENV
-
-      - name: Docker metadata
-        id: meta
-        uses: docker/metadata-action@v4
+      - name: Render Compose File
+        run: |
+          CUBEJS_IMAGE=${{ needs.build-cubejs.outputs.tags }}
+          export CUBEJS_IMAGE
+          # Render simple template from environment variables.
+          envsubst < docker-compose.uffizzi.yml > docker-compose.rendered.yml
+          cat docker-compose.rendered.yml
+      - name: Upload Rendered Compose File as Artifact
+        uses: actions/upload-artifact@v3
         with:
-          images: registry.uffizzi.com/${{ env.UUID_WORKER }}
-          tags: |
-            type=raw,value=60d
+          name: preview-spec
+          path: docker-compose.rendered.yml
+          retention-days: 2
+      - name: Serialize PR Event to File
+        run:  |
+          cat << EOF > event.json
+          ${{ toJSON(github.event) }}
 
-      - name: Build and Push Image to registry.uffizzi.com - Uffizzi's ephemeral Registry
-        uses: docker/build-push-action@v3
+          EOF
+      - name: Upload PR Event as Artifact
+        uses: actions/upload-artifact@v3
         with:
-          context: ./
-          file: Dockerfile
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          push: true
-          cache-from: type=registry,src=docker.pkg.github.com/$GITHUB_REPOSITORY/metabase-github-package
-         # cache-to: type=registry,mode=max,src=docker.pkg.github.com/$GITHUB_REPOSITORY/metabase-github-package
+          name: preview-spec
+          path: event.json
+          retention-days: 2
 
-  build-metabase-no-cache:
-    name: BM - no cache
+  delete-preview:
+    name: Call for Preview Deletion
     runs-on: ubuntu-latest
-    outputs:
-      tags: ${{ steps.meta.outputs.tags }}
-    if: ${{ github.event.action != 'closed' }}
+    if: ${{ github.event.action == 'closed' }}
     steps:
-      - name: Checkout Git Repo
-        uses: actions/checkout@v3
+      # If this PR is closing, we will not render a compose file nor pass it to the next workflow.
+      - name: Serialize PR Event to File
+        run:  |
+          cat << EOF > event.json
+          ${{ toJSON(github.event) }}
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Generate UUID image name
-        id: uuid
-        run: echo "UUID_WORKER=$(uuidgen)" >> $GITHUB_ENV
-
-      - name: Docker metadata
-        id: meta
-        uses: docker/metadata-action@v4
+          EOF
+      - name: Upload PR Event as Artifact
+        uses: actions/upload-artifact@v3
         with:
-          images: registry.uffizzi.com/${{ env.UUID_WORKER }}
-          tags: |
-            type=raw,value=60d
-
-      - name: Build and Push Image to registry.uffizzi.com - Uffizzi's ephemeral Registry
-        uses: docker/build-push-action@v3
-        with:
-          context: ./
-          file: Dockerfile
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          push: true
-
+          name: preview-spec
+          path: event.json
+          retention-days: 2
