@@ -38,7 +38,7 @@ jobs:
             let fs = require('fs');
             fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/preview-spec.zip`, Buffer.from(download.data));
 
-      - name: 'Unzip artifact'
+      - name: 'Unzip artifacts'
         run: unzip preview-spec.zip
       - name: Read Event into ENV
         run: |
