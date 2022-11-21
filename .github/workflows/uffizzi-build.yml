@@ -89,7 +89,7 @@ jobs:
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
   build-metabase-github-package:
-    name: Build and push `metabase` - cached using GHA cache
+    name: Build and push `metabase` - cached using registry
     runs-on: ubuntu-latest
     outputs:
       tags: ${{ steps.meta.outputs.tags }}
@@ -121,8 +121,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           push: true
-          cache-from: src=docker.pkg.github.com/$GITHUB_REPOSITORY/metabase-github-package
-          cache-to: mode=max,src=docker.pkg.github.com/$GITHUB_REPOSITORY/metabase-github-package
+          cache-from: src=docker.pkg.github.com/$GITHUB_REPOSITORY/metabase-github-package, type=registry
+          cache-to: mode=max,src=docker.pkg.github.com/$GITHUB_REPOSITORY/metabase-github-package, type=registry
 
   build-metabase-no-cache:
     name: Build and push `metabase` - no cache
